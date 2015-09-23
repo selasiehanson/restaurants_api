@@ -18,5 +18,9 @@ RSpec.describe Restaurant, type: :model do
 
   it { expect(@restaurant).to respond_to(:name) }
   it { expect(@restaurant).to respond_to(:description) }
-  it { expect should have_many(:opening_times) }
+  it { should have_many(:opening_times) }
+
+  #validations
+  it { should validate_presence_of(:name) }
+  it { should validate_uniqueness_of(:name) }
 end

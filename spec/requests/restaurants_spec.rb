@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe 'Restuarant Api', type: :request do 
 
-
   before do
     @route = '/api/v1/restaurants'
   end
@@ -36,15 +35,43 @@ describe 'Restuarant Api', type: :request do
       expect(mapped_days.sort).to eq(days.sort)
     end
 
-
     def days
       %w(sun mon tue wed thu fri sat)
     end
 
-    def  create_opening_times      
+    def create_opening_times      
       days.inject([]) do |result, day|
         result << FactoryGirl.build(:opening_time, day: day)
       end      
+    end
+  end
+
+  context 'creating a restaurant' do
+    before do
+      @new_restaurant_params = {
+        restaurant: {
+          name: 'A nice restaurant',
+          description: 'Serving with delight.'
+        }
+      }
+    end
+
+    it 'creates a new restaurant' do
+      xhr :post, @route, @new_restaurant_params
+
+      expect(response.status).to eq(200)
+      expect(json['name']).to eq('A nice restaurant')
+      expect(json['description']).to eq('Serving with delight.')
+    end
+
+    it 'does not create a restaurant but returns errors instead' do
+      @new_restaurant_params[:restaurant][:name] = nil
+      xhr :post, @route, @new_restaurant_params
+      
+      expect(response.status).to eq(400)
+      expect(json['code']).to eq('validation_errors')
+      expect(json['problem']).to eq("Name can't be blank")
+      expect(json['validation_errors']).not_to be_nil      
     end
   end
   
