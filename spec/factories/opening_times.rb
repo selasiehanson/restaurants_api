@@ -17,10 +17,10 @@
 
 FactoryGirl.define do
   factory :opening_time do
-    day "MyString"
-opens_at ""
-closes_at ""
-restaurant nil
+    day "sun"
+    opens_at Time.now.beginning_of_day
+    closes_at Time.now.beginning_of_day
+    restaurant_id nil
   end
 
 end

@@ -11,8 +11,8 @@
 
 FactoryGirl.define do
   factory :restaurant do
-    name "MyString"
-description "MyString"
+    name "res 1"
+    description "a nice restaurant"
   end
 
 end
