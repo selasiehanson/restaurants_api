@@ -74,5 +74,27 @@ describe 'Restuarant Api', type: :request do
       expect(json['validation_errors']).not_to be_nil      
     end
   end
+
+  context 'fecthing a restaurant' do 
+     before do
+      @res = FactoryGirl.create(:restaurant,name: 'cool chop')
+     end
+
+     it 'returns a single restaurant with a valid id' do
+        xhr :get, "#{@route}/#{@res.id}"
+
+        expect(response.status).to eq(200)
+        expect(json['name']).to eq('cool chop')
+     end
+
+     it 'returns an error for an invalid' do
+        xhr :get, "#{@route}/10000"
+
+        expect(response.status).to eq(404)        
+        expect(json['code']).to eq('record_not_found')
+        expect(json['error']).to eq("Couldn't find a restaurant with the id")
+     end
+     
+  end
   
 end

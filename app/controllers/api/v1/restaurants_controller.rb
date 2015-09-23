@@ -13,7 +13,12 @@ class Api::V1::RestaurantsController < ApplicationController
   end
 
   def show
-
+    restaurant = Restaurant.find_by(id: params[:id])
+    if restaurant
+      render json: restaurant
+    else
+      render json: error(restaurant, Restaurant.name.downcase), status: 404
+    end
   end
 
   def update
