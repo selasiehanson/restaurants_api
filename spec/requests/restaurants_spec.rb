@@ -88,13 +88,59 @@ describe 'Restuarant Api', type: :request do
      end
 
      it 'returns an error for an invalid' do
-        xhr :get, "#{@route}/10000"
+      xhr :get, "#{@route}/10000"
 
-        expect(response.status).to eq(404)        
-        expect(json['code']).to eq('record_not_found')
-        expect(json['error']).to eq("Couldn't find a restaurant with the id")
-     end
-     
+      expect(response.status).to eq(404)        
+      expect(json['code']).to eq('record_not_found')
+      expect(json['error']).to include("Couldn't find")
+     end     
   end
+
+  context 'updating  a restaurant'  do
+    before do
+      @res = FactoryGirl.create(:restaurant,name: 'cool chop')
+      @new_name = "new cool chop"
+      @new_desc = 'some new description'
+      @update_params = {
+        restaurant: {
+          name: @new_name,
+          description: @new_desc
+        }
+      }
+    end
+
+    it 'updates the restaurant with new attributes' do
+      xhr :put, "#{@route}/#{@res.id}", @update_params
+
+      expect(response.status).to eq(200)
+      expect(json['name']).to eq(@new_name)
+      expect(json['description']).to eq(@new_desc)
+    end
+
+    it 'updates the restaurant with new attributes' do
+      @update_params[:restaurant][:name] = ''
+      xhr :put, "#{@route}/#{@res.id}", @update_params
+
+      expect(response.status).to eq(400)
+      expect(json['code']).to eq('validation_errors')
+      expect(json['validation_errors']).not_to be_nil      
+    end    
+  end
+
+  context 'deleting a restuarant' do
+      before do
+        @res = FactoryGirl.create(:restaurant,name: 'cool chop')
+      end
+
+      it 'deletes a restuarant' do
+        xhr :delete, "#{@route}/#{@res.id}"
+        expect(response.status).to eq(204)
+      end
+
+      it 'returns and ivalid status for an unknown restuarant' do
+        xhr :delete, "#{@route}/10101010"
+        expect(response.status).to eq(404)
+      end
+    end
   
 end

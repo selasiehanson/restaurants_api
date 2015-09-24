@@ -3,16 +3,13 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
   def error(model, klass = '')
     res = {
       code: '',
       error: ''            
-    }
-    unless model
-      res[:code] = "record_not_found"
-      res[:error] = "Couldn't find a #{klass} with the id"
-      return res
-    end
+    }    
 
     unless model.valid? 
       res[:error] = 'Some validation errors have been encountered'
@@ -21,5 +18,13 @@ class ApplicationController < ActionController::Base
       res[:validation_errors] = model.errors
     end
     res
+  end
+
+  def record_not_found(err)
+    res = {
+      code: "record_not_found",
+      error: err.to_s
+    }        
+    render json: res, status: 404
   end
 end
