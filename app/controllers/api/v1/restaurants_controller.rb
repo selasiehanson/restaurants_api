@@ -7,7 +7,7 @@ class Api::V1::RestaurantsController < ApplicationController
   def create
     @restaurant = Restaurant.new(restaurant_params)
     if @restaurant.save
-      render json: @restaurant
+      render json: @restaurant, status: 201
     else
       render json: error(@restaurant), status: 400
     end

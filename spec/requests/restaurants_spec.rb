@@ -59,7 +59,7 @@ describe 'Restuarant Api', type: :request do
     it 'creates a new restaurant' do
       xhr :post, @route, @new_restaurant_params
 
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(201)
       expect(json['name']).to eq('A nice restaurant')
       expect(json['description']).to eq('Serving with delight.')
     end
