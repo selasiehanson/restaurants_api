@@ -15,11 +15,7 @@ class Api::V1::RestaurantsController < ApplicationController
 
   def show
     @restaurant = Restaurant.find(params[:id])
-    if @restaurant
-      render json: @restaurant
-    else
-      render json: error(@restaurant, Restaurant.name.downcase), status: 400
-    end
+    render json: @restaurant    
   end
 
   def update
@@ -37,11 +33,8 @@ class Api::V1::RestaurantsController < ApplicationController
     head :no_content
   end
 
-  private 
+  protected 
     def restaurant_params
       params.require(:restaurant).permit(:name, :description)
-    end
-
-    def not_found()
     end
 end

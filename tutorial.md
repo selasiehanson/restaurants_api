@@ -18,3 +18,5 @@ Make it executable `chmod +x migrate`
 Open the file and put in it `rake db:migrate && rake db:test:prepare`
 
 Add serailzer for restaurant and opening times `rails g serializer restaurant` `rails g serializer opening_time`
+
+Add tests for api index. 

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
-  def error(model, klass = '')
+  def error(model)
     res = {}
     unless model.valid? 
       res[:error] = 'Some validation errors have been encountered'
