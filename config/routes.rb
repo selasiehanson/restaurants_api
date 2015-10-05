@@ -1,8 +1,27 @@
+# == Route Map
+#
+#                  Prefix Verb   URI Pattern                                            Controller#Action
+# api_v1_restaurant_menus GET    /api/v1/restaurants/:restaurant_id/menus(.:format)     api/v1/menus#index {:default=>"json"}
+#                         POST   /api/v1/restaurants/:restaurant_id/menus(.:format)     api/v1/menus#create {:default=>"json"}
+#  api_v1_restaurant_menu GET    /api/v1/restaurants/:restaurant_id/menus/:id(.:format) api/v1/menus#show {:default=>"json"}
+#                         PATCH  /api/v1/restaurants/:restaurant_id/menus/:id(.:format) api/v1/menus#update {:default=>"json"}
+#                         PUT    /api/v1/restaurants/:restaurant_id/menus/:id(.:format) api/v1/menus#update {:default=>"json"}
+#                         DELETE /api/v1/restaurants/:restaurant_id/menus/:id(.:format) api/v1/menus#destroy {:default=>"json"}
+#      api_v1_restaurants GET    /api/v1/restaurants(.:format)                          api/v1/restaurants#index {:default=>"json"}
+#                         POST   /api/v1/restaurants(.:format)                          api/v1/restaurants#create {:default=>"json"}
+#       api_v1_restaurant GET    /api/v1/restaurants/:id(.:format)                      api/v1/restaurants#show {:default=>"json"}
+#                         PATCH  /api/v1/restaurants/:id(.:format)                      api/v1/restaurants#update {:default=>"json"}
+#                         PUT    /api/v1/restaurants/:id(.:format)                      api/v1/restaurants#update {:default=>"json"}
+#                         DELETE /api/v1/restaurants/:id(.:format)                      api/v1/restaurants#destroy {:default=>"json"}
+#
+
 Rails.application.routes.draw do
   
   namespace :api, {default: 'json'} do
     namespace :v1 do
-      resources :restaurants
+      resources :restaurants, except: [:new, :edit ] do
+        resources :menus, except: [:new, :edit ]
+      end
     end
   end 
 
