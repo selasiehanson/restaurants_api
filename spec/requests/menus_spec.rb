@@ -117,12 +117,28 @@ describe 'Restuarant Api', type: :request do
   end
 
   context 'deleting a menu' do    
-    it "should delete a menu with it's menu items"  do
-      route = "#{@route}/#{@res.id}"
+    before do
+      @menu = create_menu('brunch',@res)
+      @menu_item = create_menu_item('goat salad', '10.99', @menu)
+      @menu_route = "#{@route}/#{@menu.id}"      
+    end
 
-      xhr :delete, route
+    it "should delete a menu"  do      
+
+      xhr :delete, @menu_route
       expect(response).to be_success
-      expect(response.status).to eq(204)
+      expect(response.status).to eq(204)      
+    end
+
+    describe "should delete menu items as well" do
+      before do
+        xhr :delete, @menu_route
+      end
+
+      it do
+        expect(Menu.find_by(id: @menu.id)).to be_nil
+        expect(MenuItem.find_by(menu_id: @menu.id)).to be_nil
+      end
     end
   end
 

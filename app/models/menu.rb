@@ -19,7 +19,7 @@ class Menu < ActiveRecord::Base
 
   validates_presence_of :period, :start_date, :end_date, :restaurant_id
 
-  has_many :menu_items
+  has_many :menu_items, dependent: :destroy
   belongs_to :restaurant
 
   accepts_nested_attributes_for :menu_items
