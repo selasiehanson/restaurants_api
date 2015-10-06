@@ -25,6 +25,11 @@ class Api::V1::MenusController < ApplicationController
     end
   end
 
+  def destroy
+    @menu.destroy
+    head :no_content
+  end
+
   private
     def menu_params 
       # params.require(:menu).permit(:period, :start_date, :end_date).tap do |whitelisted|

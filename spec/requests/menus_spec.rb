@@ -3,10 +3,10 @@ require 'rails_helper'
 describe 'Restuarant Api', type: :request do 
 
   before do
-    res = FactoryGirl.create(:restaurant, name: 'SamDees')
-    create_test_menu(res)
+    @res = FactoryGirl.create(:restaurant, name: 'SamDees')
+    create_test_menu(@res)
     
-    @route = "/api/v1/restaurants/#{res.id}/menus"
+    @route = "/api/v1/restaurants/#{@res.id}/menus"
   end
 
   context 'fecthing menus for a resturant' do
@@ -16,32 +16,32 @@ describe 'Restuarant Api', type: :request do
       create_test_menu(res2)
     end
 
-    # it 'should fetch menu for a the current day if day is not provided' do
-    #   xhr :get, @route
-    #   expect(response).to be_success
-    #   menu_count = json.length          
-    #   expect(menu_count).to eq(3)
-    # end
+    it 'should fetch menu for a the current day if day is not provided' do
+      xhr :get, @route
+      expect(response).to be_success
+      menu_count = json.length          
+      expect(menu_count).to eq(3)
+    end
 
-    # it 'should menu items' do
-    #   xhr :get, @route      
+    it 'should menu items' do
+      xhr :get, @route      
 
-    #   breakfast = json[0]
-    #   lunch = json[1]
-    #   dinner = json[2]
+      breakfast = json[0]
+      lunch = json[1]
+      dinner = json[2]
 
-    #   expect(breakfast['menu_items'].count).to eq(3)
-    #   expect(lunch['menu_items'].count).to eq(2)
-    #   expect(dinner['menu_items'].count).to eq(3)
-    # end
+      expect(breakfast['menu_items'].count).to eq(3)
+      expect(lunch['menu_items'].count).to eq(2)
+      expect(dinner['menu_items'].count).to eq(3)
+    end
 
-    # it 'should return name description and price fields for menutiems' do      
-    #   xhr :get, @route      
-    #   menu_item_fields = ['name', 'description', 'price', 'id'].sort
-    #   breakfast_menu_items = json[0]['menu_items']
-    #   breakfast_menu_items.first.keys      
-    #   expect(breakfast_menu_items.first.keys.sort).to eq(menu_item_fields)
-    # end
+    it 'should return name description and price fields for menutiems' do      
+      xhr :get, @route      
+      menu_item_fields = ['name', 'description', 'price', 'id'].sort
+      breakfast_menu_items = json[0]['menu_items']
+      breakfast_menu_items.first.keys      
+      expect(breakfast_menu_items.first.keys.sort).to eq(menu_item_fields)
+    end
   end
 
   context "creating a menu" do
@@ -116,25 +116,35 @@ describe 'Restuarant Api', type: :request do
     end
   end
 
+  context 'deleting a menu' do    
+    it "should delete a menu with it's menu items"  do
+      route = "#{@route}/#{@res.id}"
+
+      xhr :delete, route
+      expect(response).to be_success
+      expect(response.status).to eq(204)
+    end
+  end
+
   # plumbing
   def create_test_menu(res)
-    breakfastMenu = create_menu('breakfast', res)
-    lunchMenu = create_menu('lunch', res)
-    dinnerMenu = create_menu('dinner', res)
+    breakfast_menu = create_menu('breakfast', res)
+    lunch_menu = create_menu('lunch', res)
+    dinner_menu = create_menu('dinner', res)
 
     [
       ['BACON & SYRUP TRIPLE STACK PANCAKES', '5.0'],
       ['SMOKED SALMON BAGEL', '6.0'],
       ['EGGS ROYALE', '6.95']
     ].each do |breakfast|
-      create_menu_item(breakfast[0], breakfast[1], breakfastMenu)
+      create_menu_item(breakfast[0], breakfast[1], breakfast_menu)
     end
 
     [
       ['HAMBURGER', '5.99'],
       ['MARGHERITA PIZZA','5.99']
     ].each do |lunch|
-      create_menu_item(lunch[0], lunch[1], lunchMenu)
+      create_menu_item(lunch[0], lunch[1], lunch_menu)
     end
 
     [
@@ -142,7 +152,7 @@ describe 'Restuarant Api', type: :request do
       ['RISOTTO CAKES','6.32'],
       ['CAPRESE SALAD','4.99']
     ].each do |dinner|
-      create_menu_item(dinner[0], dinner[1], dinnerMenu)
+      create_menu_item(dinner[0], dinner[1], dinner_menu)
     end
 
   end
